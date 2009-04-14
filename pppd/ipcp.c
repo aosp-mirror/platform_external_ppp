@@ -55,6 +55,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#ifdef ANDROID_CHANGES
+#include <paths.h>
+#endif
 
 #include "pppd.h"
 #include "fsm.h"
@@ -1712,6 +1715,9 @@ ipcp_up(f)
     }
     script_setenv("IPLOCAL", ip_ntoa(go->ouraddr), 0);
     script_setenv("IPREMOTE", ip_ntoa(ho->hisaddr), 1);
+#ifdef ANDROID_CHANGES
+    script_setenv("PATH","/sbin:/system/sbin:/system/bin:/system/xbin", 0);
+#endif
 
     if (go->dnsaddr[0])
 	script_setenv("DNS1", ip_ntoa(go->dnsaddr[0]), 0);
@@ -1978,6 +1984,13 @@ ipcp_script(script)
     slprintf(strlocal, sizeof(strlocal), "%I", ipcp_gotoptions[0].ouraddr);
     slprintf(strremote, sizeof(strremote), "%I", ipcp_hisoptions[0].hisaddr);
 
+#ifdef ANDROID_CHANGES
+    argv[0] = "sh";
+    argv[1] = "-c";
+    argv[2] = script;
+    argv[3] = NULL;
+    ipcp_script_pid = run_program(_PATH_BSHELL, argv, 0, ipcp_script_done, NULL);
+#else
     argv[0] = script;
     argv[1] = ifname;
     argv[2] = devnam;
@@ -1987,6 +2000,7 @@ ipcp_script(script)
     argv[6] = ipparam;
     argv[7] = NULL;
     ipcp_script_pid = run_program(script, argv, 0, ipcp_script_done, NULL);
+#endif
 }
 
 /*
