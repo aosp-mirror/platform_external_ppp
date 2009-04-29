@@ -35,6 +35,9 @@
 #include "pppd.h"
 #include "chap-new.h"
 #include "chap-md5.h"
+#ifdef ANDROID_CHANGES
+#include "openssl-hash.h"
+#endif
 
 #ifdef CHAPMS
 #include "chap_ms.h"
@@ -141,6 +144,9 @@ chap_init(int unit)
 	memset(&client, 0, sizeof(client));
 	memset(&server, 0, sizeof(server));
 
+#ifdef ANDROID_CHANGES
+	openssl_hash_init();
+#endif
 	chap_md5_init();
 #ifdef CHAPMS
 	chapms_init();

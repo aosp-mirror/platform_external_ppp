@@ -38,7 +38,11 @@
 #endif
 
 #ifndef USE_CRYPT
+#ifdef ANDROID_CHANGES
+#include <openssl/des.h>
+#else
 #include <des.h>
+#endif
 #endif
 
 extern bool	DesSetkey __P((u_char *));

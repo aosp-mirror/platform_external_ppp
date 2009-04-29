@@ -171,7 +171,7 @@ u_char *key;
 }
 
 bool
-DesEncrypt(clear, key, cipher)
+DesEncrypt(clear, cipher)
 u_char *clear;	/* IN  8 octets */
 u_char *cipher;	/* OUT 8 octets */
 {

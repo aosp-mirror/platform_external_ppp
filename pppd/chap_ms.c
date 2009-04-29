@@ -89,8 +89,12 @@
 #include "pppd.h"
 #include "chap-new.h"
 #include "chap_ms.h"
+#ifdef ANDROID_CHANGES
+#include "openssl-hash.h"
+#else
 #include "md4.h"
 #include "sha1.h"
+#endif
 #include "pppcrypt.h"
 #include "magic.h"
 
@@ -514,11 +518,16 @@ ascii2unicode(char ascii[], int ascii_len, u_char unicode[])
 static void
 NTPasswordHash(char *secret, int secret_len, u_char hash[MD4_SIGNATURE_SIZE])
 {
+#ifdef ANDROID_CHANGES
+    /* We link with MD4 routines in openssl, we have to take bytes instead */
+    int			mdlen = secret_len;
+#else
 #ifdef __NetBSD__
     /* NetBSD uses the libc md4 routines which take bytes instead of bits */
     int			mdlen = secret_len;
 #else
     int			mdlen = secret_len * 8;
+#endif
 #endif
     MD4_CTX		md4Context;
 
