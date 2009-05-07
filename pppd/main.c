@@ -360,13 +360,20 @@ main(argc, argv)
      */
     tty_init();
 
+#ifdef ANDROID_CHANGES
+    {
+        extern void pppox_init();
+        pppox_init();
+    }
+#endif
+
     progname = *argv;
 
     /*
      * Parse, in order, the system options file, the user's options file,
      * and the command line arguments.
      */
-#ifdef ANDROID
+#ifdef ANDROID_CHANGES
     /* Android: only take options from commandline */
     if (!parse_args(argc-1, argv+1))
 	exit(EXIT_OPTION_ERROR);

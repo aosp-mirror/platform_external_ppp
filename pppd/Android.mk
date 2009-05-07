@@ -13,7 +13,6 @@ LOCAL_SRC_FILES:= \
 	chap-new.c \
 	ccp.c \
 	ecp.c \
-	ipxcp.c \
 	auth.c \
 	options.c \
 	sys-linux.c \
@@ -24,10 +23,11 @@ LOCAL_SRC_FILES:= \
 	eap.c \
 	chap-md5.c \
 	pppcrypt.c \
-	openssl-hash.c
+	openssl-hash.c \
+	pppox.c
 
 LOCAL_SHARED_LIBRARIES := \
-	libcutils libcrypto libssl
+	libcutils libcrypto
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/include
