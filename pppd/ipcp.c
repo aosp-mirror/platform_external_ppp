@@ -1717,6 +1717,7 @@ ipcp_up(f)
     script_setenv("IPREMOTE", ip_ntoa(ho->hisaddr), 1);
 #ifdef ANDROID_CHANGES
     script_setenv("PATH","/sbin:/system/sbin:/system/bin:/system/xbin", 0);
+    script_setenv("ANDROID_PROPERTY_WORKSPACE", getenv("ANDROID_PROPERTY_WORKSPACE"), 0);
 #endif
 
     if (go->dnsaddr[0])
