@@ -649,6 +649,21 @@ print_string(p, len, printer, arg)
     printer(arg, "\"");
 }
 
+/*
+ * logit - does the hard work for fatal et al.
+ */
+static void
+logit(level, fmt, args)
+    int level;
+    char *fmt;
+    va_list args;
+{
+    int n;
+    char buf[1024];
+
+    n = vslprintf(buf, sizeof(buf), fmt, args);
+    log_write(level, buf);
+}
 
 #ifdef ANDROID_CHANGES
 
@@ -669,32 +684,12 @@ static int syslog_to_android[] = {
 
 #endif
 
-/*
- * logit - does the hard work for fatal et al.
- */
-static void
-logit(level, fmt, args)
-    int level;
-    char *fmt;
-    va_list args;
-{
-    int n;
-    char buf[1024];
-
-    n = vslprintf(buf, sizeof(buf), fmt, args);
-
-#ifndef ANDROID_CHANGES
-    log_write(level, buf);
-#else
-    __android_log_write(syslog_to_android[level], LOG_TAG, buf);
-#endif
-}
-
 static void
 log_write(level, buf)
     int level;
     char *buf;
 {
+#ifndef ANDROID_CHANGES
     syslog(level, "%s", buf);
 
     fprintf(stderr, buf);
@@ -708,6 +703,9 @@ log_write(level, buf)
 	    || write(log_to_fd, "\n", 1) != 1)
 	    log_to_fd = -1;
     }
+#else
+    __android_log_write(syslog_to_android[level], LOG_TAG, buf);
+#endif
 }
 
 /*
