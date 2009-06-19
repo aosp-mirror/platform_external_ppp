@@ -825,6 +825,7 @@ static void
 create_pidfile(pid)
     int pid;
 {
+#ifndef ANDROID_CHANGES
     FILE *pidfile;
 
     slprintf(pidfilename, sizeof(pidfilename), "%s%s.pid",
@@ -836,12 +837,14 @@ create_pidfile(pid)
 	error("Failed to create pid file %s: %m", pidfilename);
 	pidfilename[0] = 0;
     }
+#endif
 }
 
 void
 create_linkpidfile(pid)
     int pid;
 {
+#ifndef ANDROID_CHANGES
     FILE *pidfile;
 
     if (linkname[0] == 0)
@@ -858,6 +861,7 @@ create_linkpidfile(pid)
 	error("Failed to create pid file %s: %m", linkpidfile);
 	linkpidfile[0] = 0;
     }
+#endif
 }
 
 /*
@@ -865,12 +869,14 @@ create_linkpidfile(pid)
  */
 void remove_pidfiles()
 {
+#ifndef ANDROID_CHANGES
     if (pidfilename[0] != 0 && unlink(pidfilename) < 0 && errno != ENOENT)
 	warn("unable to delete pid file %s: %m", pidfilename);
     pidfilename[0] = 0;
     if (linkpidfile[0] != 0 && unlink(linkpidfile) < 0 && errno != ENOENT)
 	warn("unable to delete pid file %s: %m", linkpidfile);
     linkpidfile[0] = 0;
+#endif
 }
 
 /*
@@ -1635,6 +1641,21 @@ run_program(prog, args, must_exist, done, arg)
 {
     int pid;
     struct stat sbuf;
+
+#ifdef ANDROID_CHANGES
+    /* Originally linkname is used to create named pid files, which is
+    * meaningless to android. Here we use it as a suffix of program names,
+    * so different users can run their own program by specifying it. For
+    * example, "/etc/ppp/ip-up-vpn" will be executed when IPCP is up and
+    * linkname is "vpn". Note that "/" is not allowed for security reasons. */
+    char file[MAXPATHLEN];
+
+    if (linkname[0] && !strchr(linkname, '/')) {
+        snprintf(file, MAXPATHLEN, "%s-%s", prog, linkname);
+        file[MAXPATHLEN - 1] = '\0';
+        prog = file;
+    }
+#endif
 
     /*
      * First check if the file exists and is executable.
