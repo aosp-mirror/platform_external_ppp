@@ -812,8 +812,10 @@ detach()
 void
 reopen_log()
 {
+#ifndef ANDROID_CHANGES
     openlog("pppd", LOG_PID | LOG_NDELAY, LOG_PPP);
     setlogmask(LOG_UPTO(LOG_INFO));
+#endif
 }
 
 /*
@@ -1525,7 +1527,9 @@ safe_fork(int infd, int outfd, int errfd)
 	if (errfd != 2)
 		dup2(errfd, 2);
 
+#ifndef ANDROID_CHANGES
 	closelog();
+#endif
 	if (log_to_fd > 2)
 		close(log_to_fd);
 	if (the_channel->close)
@@ -1674,11 +1678,15 @@ run_program(prog, args, must_exist, done, arg)
     /* run the program */
     execve(prog, args, script_env);
     if (must_exist || errno != ENOENT) {
+#ifndef ANDROID_CHANGES
 	/* have to reopen the log, there's nowhere else
 	   for the message to go. */
 	reopen_log();
 	syslog(LOG_ERR, "Can't execute %s: %m", prog);
 	closelog();
+#else
+	error("Can't execute %s: %m", prog);
+#endif
     }
     _exit(-1);
 }
