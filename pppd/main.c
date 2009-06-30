@@ -364,6 +364,7 @@ main(argc, argv)
     {
         extern void pppox_init();
         pppox_init();
+        privileged = 1;
     }
 #endif
 
@@ -398,6 +399,7 @@ main(argc, argv)
     if (debug)
 	setlogmask(LOG_UPTO(LOG_DEBUG));
 
+#ifndef ANDROID_CHANGES
     /*
      * Check that we are running as root.
      */
@@ -406,6 +408,7 @@ main(argc, argv)
 		     argv[0]);
 	exit(EXIT_NOT_ROOT);
     }
+#endif
 
     if (!ppp_available()) {
 	option_error("%s", no_ppp_msg);
