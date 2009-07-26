@@ -665,11 +665,31 @@ logit(level, fmt, args)
     log_write(level, buf);
 }
 
+#ifdef ANDROID_CHANGES
+
+#if LOG_PRIMASK != 7
+#error Syslog.h has been changed! Please fix this table!
+#endif
+
+static int syslog_to_android[] = {
+    [LOG_EMERG] = ANDROID_LOG_FATAL,
+    [LOG_ALERT] = ANDROID_LOG_FATAL,
+    [LOG_CRIT] = ANDROID_LOG_FATAL,
+    [LOG_ERR] = ANDROID_LOG_ERROR,
+    [LOG_WARNING] = ANDROID_LOG_WARN,
+    [LOG_NOTICE] = ANDROID_LOG_INFO,
+    [LOG_INFO] = ANDROID_LOG_INFO,
+    [LOG_DEBUG] = ANDROID_LOG_DEBUG,
+};
+
+#endif
+
 static void
 log_write(level, buf)
     int level;
     char *buf;
 {
+#ifndef ANDROID_CHANGES
     syslog(level, "%s", buf);
 
     fprintf(stderr, buf);
@@ -683,6 +703,9 @@ log_write(level, buf)
 	    || write(log_to_fd, "\n", 1) != 1)
 	    log_to_fd = -1;
     }
+#else
+    __android_log_write(syslog_to_android[level], LOG_TAG, buf);
+#endif
 }
 
 /*
@@ -701,11 +724,7 @@ fatal __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_ERROR, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_ERR, fmt, pvar);
-#endif
     va_end(pvar);
 
     die(1);			/* as promised */
@@ -727,12 +746,7 @@ error __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_ERROR, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_ERR, fmt, pvar);
-#endif
-
     va_end(pvar);
     ++error_count;
 }
@@ -753,12 +767,7 @@ warn __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_WARN, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_WARNING, fmt, pvar);
-#endif
-
     va_end(pvar);
 }
 
@@ -778,11 +787,7 @@ notice __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_INFO, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_NOTICE, fmt, pvar);
-#endif
     va_end(pvar);
 }
 
@@ -802,12 +807,7 @@ info __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_INFO, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_INFO, fmt, pvar);
-#endif
-
     va_end(pvar);
 }
 
@@ -827,11 +827,7 @@ dbglog __V((char *fmt, ...))
     fmt = va_arg(pvar, char *);
 #endif
 
-#ifdef ANDROID_CHANGES
-    __android_log_vprint(ANDROID_LOG_DEBUG, LOG_TAG, fmt, pvar);
-#else
     logit(LOG_DEBUG, fmt, pvar);
-#endif
     va_end(pvar);
 }
 

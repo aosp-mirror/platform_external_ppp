@@ -1996,9 +1996,9 @@ static void
 create_resolv(peerdns1, peerdns2)
     u_int32_t peerdns1, peerdns2;
 {
+#ifndef ANDROID_CHANGES
     FILE *f;
 
-#if 0 /* resolv.conf has no meaning for ANDROIDS */
     f = fopen(_PATH_RESOLV, "w");
     if (f == NULL) {
 	error("Failed to create %s: %m", _PATH_RESOLV);

@@ -1065,8 +1065,9 @@ option_error __V((char *fmt, ...))
     va_end(args);
     if (phase == PHASE_INITIALIZE)
 	fprintf(stderr, "%s: %s\n", progname, buf);
+#ifndef ANDROID_CHANGES
     syslog(LOG_ERR, "%s", buf);
-#ifdef ANDROID_CHANGES
+#else
     error("%s", buf);
 #endif    
 }
