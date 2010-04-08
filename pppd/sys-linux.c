@@ -2561,7 +2561,7 @@ get_pty(master_fdp, slave_fdp, slave_name, uid)
     if (mfd >= 0) {
 	int ptn;
 	if (ioctl(mfd, TIOCGPTN, &ptn) >= 0) {
-	    slprintf(pty_name, sizeof(pty_name), "/dev.pts/%d", ptn);
+	    slprintf(pty_name, sizeof(pty_name), "/dev/pts/%d", ptn);
 	    chmod(pty_name, S_IRUSR | S_IWUSR);
 #ifdef TIOCSPTLCK
 	    ptn = 0;
