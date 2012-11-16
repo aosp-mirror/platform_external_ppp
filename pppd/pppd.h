@@ -506,8 +506,10 @@ void print_string __P((char *, int,  void (*) (void *, char *, ...),
 		void *));	/* Format a string for output */
 int slprintf __P((char *, int, char *, ...));		/* sprintf++ */
 int vslprintf __P((char *, int, char *, va_list));	/* vsprintf++ */
+#if !defined(ANDROID_CHANGES)
 size_t strlcpy __P((char *, const char *, size_t));	/* safe strcpy */
 size_t strlcat __P((char *, const char *, size_t));	/* safe strncpy */
+#endif
 void dbglog __P((char *, ...));	/* log a debug message */
 void info __P((char *, ...));	/* log an informational message */
 void notice __P((char *, ...));	/* log a notice-level message */
