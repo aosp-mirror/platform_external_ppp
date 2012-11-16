@@ -81,6 +81,8 @@ struct buffer_info {
     int len;
 };
 
+#if !defined(ANDROID_CHANGES)
+
 /*
  * strlcpy - like strcpy/strncpy, doesn't overflow destination buffer,
  * always leaves destination null-terminated (for len > 0).
@@ -118,6 +120,7 @@ strlcat(dest, src, len)
 
     return dlen + strlcpy(dest + dlen, src, (len > dlen? len - dlen: 0));
 }
+#endif
 
 
 /*
