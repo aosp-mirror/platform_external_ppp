@@ -25,7 +25,7 @@ LOCAL_SRC_FILES:= \
 	pppox.c
 
 LOCAL_SHARED_LIBRARIES := \
-	libcutils libcrypto
+	libcutils liblog libcrypto
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/include
