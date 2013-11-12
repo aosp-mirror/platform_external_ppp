@@ -111,6 +111,7 @@
 #include <netinet/if_ether.h>
 #else
 #include <linux/types.h>
+#include <linux/tty.h>
 #include <linux/if.h>
 #include <linux/if_arp.h>
 #include <linux/route.h>
