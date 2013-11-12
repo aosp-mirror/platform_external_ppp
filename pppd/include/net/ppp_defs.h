@@ -38,6 +38,10 @@
 #ifndef _PPP_DEFS_H_
 #define _PPP_DEFS_H_
 
+#if defined(PPP_ADDRESS)
+#define USING_UAPI
+#endif
+
 /*
  * The basic PPP frame.
  */
@@ -59,9 +63,11 @@
 #define PPP_MAXMRU	65000	/* Largest MRU we allow */
 #define PPP_MINMRU	128
 
+#if !defined(USING_UAPI)
 #define PPP_ADDRESS(p)	(((u_char *)(p))[0])
 #define PPP_CONTROL(p)	(((u_char *)(p))[1])
 #define PPP_PROTOCOL(p)	((((u_char *)(p))[2] << 8) + ((u_char *)(p))[3])
+#endif
 
 /*
  * Significant octet values.
@@ -124,6 +130,15 @@ typedef u_int32_t	ext_accm[8];
 /*
  * What to do with network protocol (NP) packets.
  */
+#if defined(USING_UAPI)
+/* This stuff isn't in uapi. TODO: is there a newer pppd that doesn't use this? */
+#define ifr__name b.ifr_ifrn.ifrn_name
+#define stats_ptr b.ifr_ifru.ifru_data
+struct ifpppstatsreq {
+   struct ifreq b;
+   struct ppp_stats stats;
+};
+#else
 enum NPmode {
     NPMODE_PASS,		/* pass the packet through */
     NPMODE_DROP,		/* silently drop the packet */
@@ -182,6 +197,8 @@ struct ppp_idle {
     time_t xmit_idle;		/* time since last NP packet sent */
     time_t recv_idle;		/* time since last NP packet received */
 };
+
+#endif
 
 #ifndef __P
 #ifdef __STDC__
