@@ -61,7 +61,7 @@
 #include "lcp.h"
 
 #ifdef ANDROID_CHANGES
-#include <cutils/logd.h>
+#include <android/log.h>
 #endif
 
 static const char rcsid[] = RCSID;
