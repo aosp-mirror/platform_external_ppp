@@ -17,7 +17,6 @@ LOCAL_SRC_FILES:= \
 	lcp.c \
 	magic.c \
 	main.c \
-	openssl-hash.c \
 	options.c \
 	pppcrypt.c \
 	pppox.c \
@@ -33,7 +32,7 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/include
 
-LOCAL_CFLAGS := -DCHAPMS=1 -DMPPE=1 -DINET6=1 -Iexternal/openssl/include -Wno-unused-parameter -Wno-empty-body -Wno-missing-field-initializers -Wno-attributes -Wno-sign-compare -Wno-pointer-sign -Werror
+LOCAL_CFLAGS := -DCHAPMS=1 -DMPPE=1 -DINET6=1 -DUSE_OPENSSL=1 -Iexternal/openssl/include -Wno-unused-parameter -Wno-empty-body -Wno-missing-field-initializers -Wno-attributes -Wno-sign-compare -Wno-pointer-sign -Werror
 
 LOCAL_MODULE:= pppd
 
