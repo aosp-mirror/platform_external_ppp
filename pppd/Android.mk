@@ -26,6 +26,10 @@ LOCAL_SRC_FILES:= \
 	upap.c \
 	utils.c
 
+# options.c:623:21: error: passing 'const char *' to parameter of type 'char *' discards qualifiers.
+# [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+LOCAL_CLANG_CFLAGS += -Wno-incompatible-pointer-types-discards-qualifiers
+
 LOCAL_SHARED_LIBRARIES := \
 	libcutils liblog libcrypto
 
