@@ -38,6 +38,9 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_CFLAGS := -DCHAPMS=1 -DMPPE=1 -DINET6=1 -DUSE_OPENSSL=1 -Iexternal/openssl/include -Wno-unused-parameter -Wno-empty-body -Wno-missing-field-initializers -Wno-attributes -Wno-sign-compare -Wno-pointer-sign -Werror
 
+# Turn off warnings for now until this is fixed upstream. b/18632512
+LOCAL_CFLAGS += -Wno-unused-variable
+
 LOCAL_MODULE:= pppd
 
 include $(BUILD_EXECUTABLE)
