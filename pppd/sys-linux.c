@@ -1044,7 +1044,7 @@ void restore_tty (int tty_fd)
  * output - Output PPP packet.
  */
 
-void output (int unit, unsigned char *p, int len)
+__attribute((weak)) void output (int unit, unsigned char *p, int len)
 {
     int fd = ppp_fd;
     int proto;
