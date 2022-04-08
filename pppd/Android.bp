@@ -12,43 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package {
-    default_applicable_licenses: ["external_ppp_pppd_license"],
-}
-
-// Added automatically by a large-scale-change that took the approach of
-// 'apply every license found to every target'. While this makes sure we respect
-// every license restriction, it may not be entirely correct.
-//
-// e.g. GPL in an MIT project might only apply to the contrib/ directory.
-//
-// Please consider splitting the single license below into multiple licenses,
-// taking care not to lose any license_kind information, and overriding the
-// default license using the 'licenses: [...]' property on targets as needed.
-//
-// For unused files, consider creating a 'fileGroup' with "//visibility:private"
-// to attach the license to, and including a comment whether the files may be
-// used in the current project.
-// See: http://go/android-license-faq
-license {
-    name: "external_ppp_pppd_license",
-    visibility: [":__subpackages__"],
-    license_kinds: [
-        "SPDX-license-identifier-0BSD",
-        "SPDX-license-identifier-Apache-2.0",
-        "SPDX-license-identifier-BSD",
-        "SPDX-license-identifier-GPL",
-        "SPDX-license-identifier-GPL-2.0",
-        "SPDX-license-identifier-LGPL",
-        "SPDX-license-identifier-MIT",
-        "legacy_notice",
-        "legacy_unencumbered",
-    ],
-    license_text: [
-        "NOTICE",
-    ],
-}
-
 cc_defaults {
     name: "ppp_defaults",
     cflags: [
@@ -60,13 +23,14 @@ cc_defaults {
         "-Wno-unused-parameter",
         "-Werror",
         "-Wno-pointer-sign",
-        "-DPLUGIN",
     ],
     local_include_dirs: ["include"],
 }
 
-filegroup {
-    name: "pppd-sources",
+cc_binary {
+    name: "pppd",
+    defaults: ["ppp_defaults"],
+
     srcs: [
         "auth.c",
         "ccp.c",
@@ -91,17 +55,7 @@ filegroup {
         "tty.c",
         "upap.c",
         "utils.c",
-    ]
-}
-
-cc_library_static {
-    name: "libpppd",
-    defaults: ["ppp_defaults"],
-
-    srcs: [
-        ":pppd-sources"
     ],
-    export_include_dirs:[".", "include"],
 
     // options.c:623:21: error: passing 'const char *' to parameter of
     // type 'char *' discards qualifiers.
@@ -116,10 +70,10 @@ cc_library_static {
     ],
 
     cflags: [
-        "-Dmain=main_loop",
         "-Wno-empty-body",
         "-Wno-attributes",
         "-Wno-sign-compare",
+        "-DPLUGIN",
     ],
 
     ldflags: ["-rdynamic"],
@@ -127,35 +81,6 @@ cc_library_static {
         "pppol2tp-android",
         "pppopptp-android",
     ],
-}
-
-cc_binary {
-    name: "pppd",
-    defaults: ["ppp_defaults"],
-
-    srcs: [
-        ":pppd-sources"
-    ],
-
-    shared_libs: [
-        "libdl",
-        "liblog",
-        "libcutils",
-        "libcrypto",
-    ],
-
-    ldflags: ["-rdynamic"],
-
-    clang_cflags: ["-Wno-incompatible-pointer-types-discards-qualifiers"],
-
-    required: [
-        "pppol2tp-android",
-        "pppopptp-android",
-    ],
-
-    sanitize: {
-        memtag_heap: true,
-    },
 }
 
 cc_library_shared {
