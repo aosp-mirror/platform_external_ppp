@@ -91,7 +91,7 @@ filegroup {
         "tty.c",
         "upap.c",
         "utils.c",
-    ]
+    ],
 }
 
 cc_library_static {
@@ -99,14 +99,16 @@ cc_library_static {
     defaults: ["ppp_defaults"],
 
     srcs: [
-        ":pppd-sources"
+        ":pppd-sources",
     ],
-    export_include_dirs:[".", "include"],
+    export_include_dirs: [
+        ".",
+        "include",
+    ],
 
     // options.c:623:21: error: passing 'const char *' to parameter of
     // type 'char *' discards qualifiers.
     // [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-    clang_cflags: ["-Wno-incompatible-pointer-types-discards-qualifiers"],
 
     shared_libs: [
         "libdl",
@@ -120,6 +122,7 @@ cc_library_static {
         "-Wno-empty-body",
         "-Wno-attributes",
         "-Wno-sign-compare",
+        "-Wno-incompatible-pointer-types-discards-qualifiers",
     ],
 
     ldflags: ["-rdynamic"],
@@ -134,7 +137,7 @@ cc_binary {
     defaults: ["ppp_defaults"],
 
     srcs: [
-        ":pppd-sources"
+        ":pppd-sources",
     ],
 
     shared_libs: [
@@ -146,7 +149,7 @@ cc_binary {
 
     ldflags: ["-rdynamic"],
 
-    clang_cflags: ["-Wno-incompatible-pointer-types-discards-qualifiers"],
+    cflags: ["-Wno-incompatible-pointer-types-discards-qualifiers"],
 
     required: [
         "pppol2tp-android",
