@@ -1,6 +1,6 @@
 name: "ppp"
-version: "2.4.7"
 
 third_party {
+  version: "2.4.7"
   license_type: RESTRICTED
 }
