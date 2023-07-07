@@ -1,6 +1,19 @@
 name: "ppp"
-version: "2.4.7"
-
+description: "ppp (Paul's PPP Package) is an open source package which implements the Point-to-Point Protocol (PPP) on Linux and Solaris systems."
 third_party {
+  url {
+    type: HOMEPAGE
+    value: "https://ppp.samba.org/"
+  }
+  url {
+    type: ARCHIVE
+    value: "https://ftp.samba.org/pub/ppp/ppp-2.4.7.tar.gz"
+  }
+  version: "ppp-2.4.7"
   license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2014
+    month: 12
+    day: 8
+  }
 }
