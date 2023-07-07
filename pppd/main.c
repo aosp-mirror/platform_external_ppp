@@ -1735,10 +1735,9 @@ device_script(program, in, out, dont_wait)
     /* here we are executing in the child */
 
     setgid(getgid());
-    setuid(uid);
-    if (getuid() != uid) {
-	fprintf(stderr, "pppd: setuid failed\n");
-	exit(1);
+    if (setuid(uid) < 0) {
+        fprintf(stderr, "pppd: setuid failed: %s\n", strerror(errno));
+        exit(1);
     }
     update_system_environment();
 #if defined(__ANDROID__)
