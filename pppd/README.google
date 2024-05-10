@@ -1,2 +1,0 @@
-Notes:
-Removed multilink.c, spinlock.[ch], tdb.[ch] as they are unused.
